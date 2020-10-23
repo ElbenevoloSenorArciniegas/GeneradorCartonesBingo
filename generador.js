@@ -56,6 +56,15 @@ function hashing (carton) {
 
 function pintar (carton) {
 	_idCarton.innerText = ""+ Math.floor(carton.id/100) + Math.floor((carton.id%100)/10) + carton.id%10;
+
+	TR = document.createElement("tr");
+	for (var i = 0; i < 5; i++) {
+		Th = document.createElement("th");
+		Th.innerText = "BINGO"[i];
+		TR.appendChild(Th);
+	}
+	_tbody.appendChild(TR);
+
 	for (var i = 0; i < 5; i++) {
 		TR = document.createElement("tr");
 		for (var j = 0; j < 5; j++) {
@@ -68,6 +77,9 @@ function pintar (carton) {
 }
 
 function despintar () {
+	/*for (var i = 1; i < _tbody.childNodes.length; i++) {
+		_tbody.removeChild(_tbody.childNodes[i]);
+	};*/
 	while (_tbody.hasChildNodes()) {
 		_tbody.removeChild(_tbody.childNodes[0]);
 	}
