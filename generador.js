@@ -6,7 +6,7 @@ function main (n) {
 	
 	for (var i = 0; i < n; i++) {
 		var carton = {};
-		carton.id = i;
+		carton.id = i+500;
 		carton = generarCarton(carton);
 		code= hashing(carton);
 		while(hashArray.includes(code)){
@@ -89,25 +89,65 @@ function despintar () {
 function toCanvas () {
 	html2canvas(document.querySelector("#capture")).then(canvas => {
     	document.body.appendChild(canvas)
+    	procederADescargar();
 	});
 }
 
 //####################################################################################################
 
-main(2);
+var i = 0;
 
-for (var i = 0; i < cartones.length; i++) {
-	pintar(cartones[i]);
-	toCanvas();
+function primeraMitad () {
+	if(i < cartones.length){
+		console.log("primera");
+		pintar(cartones[i]);
+		promesaDeGraficar().then(function (result) {
+			console.log("graficar");
+    	});
+	}
+}
+
+function segundaMitad () {
+	console.log("segunda");
 	despintar();
+	i++;
+	primeraMitad();
+}
+
+let promesaDeGraficar = function () {
+    return new Promise(function (resolve, reject) {
+    	console.log("toCanvas");
+    	toCanvas();
+    	resolve();
+	});
 };
 
-setTimeout(function(){
-	var imagenes = document.getElementsByTagName("canvas");
-	for (var i = 0; i < cartones.length; i++) {
-		var id = i;
-		imagenes[i].toBlob(function(blob) {
-	    	saveAs(blob, "bingo.png");
+let promesaDeDescargar = function () {
+    return new Promise(function (resolve, reject) {
+    	console.log("toBlob");
+    	var canvas = document.getElementsByTagName("canvas")[i];
+		canvas.toBlob(function(blob) {
+    	saveAs(blob, "bingo.png");
 		});
-	};
-}, 3000);
+		resolve();
+	});
+};
+
+function procederADescargar () {
+	promesaDeDescargar().then(function (result) {
+		console.log("descargar");
+		segundaMitad(result);
+	});
+}
+
+main(500);
+primeraMitad();
+
+/*
+var imagenes = document.getElementsByTagName("canvas");
+		for (var i = 0; i < imagenes.length; i++) {
+			imagenes[i].toBlob(function(blob) {
+		    	saveAs(blob, "bingo.png");
+			});
+		};
+*/
